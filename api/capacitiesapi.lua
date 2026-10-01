@@ -361,7 +361,7 @@ function API.getDirAndPath(attachmentKey)
     else
         targetDir = targetDir .. attachmentKey
     end
-    local targetPath = targetDir .. "/" .. attachment.properties.title.title.value .. ".pdf"
+    local targetPath = targetDir .. "/" .. API.getItemTitle(attachment) .. ".pdf"
 
     return targetDir, targetPath
 end
@@ -444,9 +444,6 @@ function API.displayCollection(key)
     local items = API.getItems()
     local itemsArray = {}
 
-    print("CapiPDF: "..#items)
-    print("CapiPDF: "..inspect(items))
-
     if items == nil then
         return itemsArray
     end
@@ -455,7 +452,7 @@ function API.displayCollection(key)
         local collectionsArray = {}
         local collections = API.getCollections()
 
-        if collections == nil or #collections == 0 then
+        if collections == nil then
             goto skip_collections
         end
 
@@ -472,16 +469,16 @@ function API.displayCollection(key)
         ::skip_collections::
 
         for k, item in pairs(items) do
-            table.insert(itemsArray, {
-                    ["key"] = k,
-                    ["text"] = item.properties.title.title.value
-                })
+            local item_collections = item.collections
+            if item_collections == nil or #item_collections == 0 then
+                table.insert(itemsArray, {
+                        ["key"] = k,
+                        ["text"] = API.getItemTitle(item)
+                    })
+            end
         end
 
         table.sort(itemsArray, comparator)
-
-        print("CapiPDF: " .. inspect(collectionsArray))
-        print("CapiPDF: " .. inspect(itemsArray))
 
         return Utils.join_tables(collectionsArray, itemsArray)
     end
@@ -492,11 +489,13 @@ function API.displayCollection(key)
             if Utils.table_contains(item_collections, key) then
                 table.insert(itemsArray, {
                     ["key"] = k,
-                    ["text"] = item.title
+                    ["text"] = API.getItemTitle(item)
                 })
             end
         end
     end
+
+    print("CapiPDF: items inside collection -> " .. inspect(itemsArray))
 
     table.sort(itemsArray, comparator)
 
@@ -588,6 +587,10 @@ function API.resetSyncState()
     API.setItems({})
     API.setCollections({})
     API.setLibraryVersion(0)
+end
+
+function API.getItemTitle(item)
+    return item.properties.title.title.value
 end
 
 return API
