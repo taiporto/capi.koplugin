@@ -6,8 +6,6 @@ local JSON = require("json")
 local lfs = require("libs/libkoreader-lfs")
 local HTTPRequest = require("lib.http_request")
 
-local inspect = require("external_libs.inspect")
-
 local Utils = require("utils")
 
 local API = {}
@@ -454,8 +452,6 @@ function API.displayCollection(key)
             end
         end
     end
-
-    print("Capi: items inside collection -> " .. inspect(itemsArray))
 
     table.sort(itemsArray, comparator)
 
