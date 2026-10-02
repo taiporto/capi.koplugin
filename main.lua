@@ -207,7 +207,7 @@ function Plugin:checkInitialized()
 end
 
 function Plugin:initAPIAndBrowser()
-    self.capacities_dir_path = DataStorage:getDataDir() .. "/capacities"
+    self.capacities_dir_path = DataStorage:getDataDir() .. "/capi"
     lfs.mkdir(self.capacities_dir_path)
     CapacitiesAPI.init(self.capacities_dir_path)
     self.small_font_face = Font:getFace("smallffont")
