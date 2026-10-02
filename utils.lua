@@ -1,5 +1,4 @@
 local lfs = require("libs/libkoreader-lfs")
-local inspect = require("external_libs.inspect")
 
 local Utils = {}
 
@@ -13,7 +12,6 @@ function Utils.file_exists(path)
 end
 
 function Utils.table_contains(t,  search_value)
-    print("tc: " .. inspect(t))
     for _, v in pairs(t) do
         if v == search_value then
             return true
